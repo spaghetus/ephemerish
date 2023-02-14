@@ -37,6 +37,10 @@ impl russh::server::Handler for Handler {
 		user: &str,
 		public_key: &PublicKey,
 	) -> Result<(Self, Auth), Self::Error> {
+		println!(
+			"Login attempt by {user} with key {}",
+			public_key.fingerprint()
+		);
 		if let Some(keys) = self.server.users.get(user) {
 			if keys.iter().any(|key| key == public_key) {
 				self.name = Some(user.to_string());
@@ -47,10 +51,12 @@ impl russh::server::Handler for Handler {
 						.or_insert(Arc::new(()))
 						.clone(),
 				);
+				println!("{user} successful login!");
 				return Ok((self, Auth::Accept));
 			}
 		}
 
+		println!("{user} rejected.");
 		Ok((
 			self,
 			Auth::Reject {

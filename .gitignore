@@ -1,1 +1,4 @@
 /target
+/authorized_keys
+/server.key
+/server.key.pub

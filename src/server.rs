@@ -27,6 +27,16 @@ pub struct Server {
 }
 
 impl Server {
+	pub fn new(docker: Docker, users: HashMap<String, Vec<PublicKey>>) -> Self {
+		Self {
+			docker: Arc::new(docker),
+			users: Arc::new(users),
+			expiration_length: Duration::from_secs(60 * 60),
+			connections: Default::default(),
+			last_closure: Default::default(),
+			containers: Default::default(),
+		}
+	}
 	pub fn connection_count(&self, name: Option<&str>) -> usize {
 		if let Some(name) = name {
 			if let Some(arc) = self.connections.get(name) {
@@ -83,6 +93,7 @@ impl russh::server::Server for Server {
 	type Handler = Handler;
 
 	fn new_client(&mut self, peer_addr: Option<std::net::SocketAddr>) -> Self::Handler {
+		println!("Connection from {peer_addr:?}");
 		Handler {
 			server: self.clone(),
 			name: None,

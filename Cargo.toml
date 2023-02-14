@@ -8,9 +8,10 @@ edition = "2021"
 [dependencies]
 bollard = "0.14.0"
 dashmap = "5.4.0"
-russh = "*"
-russh-keys = "*"
+russh = {version = "*", features = ["openssl"]}
+russh-keys = {version = "*", features = ["openssl"]}
 thiserror = "*"
 futures = "*"
 tokio = {version = "*", features = ["full"]}
 async-trait = "*"
+clap = {version = "*", features = ["derive", "env"]}
